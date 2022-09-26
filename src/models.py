@@ -27,6 +27,8 @@ class User(db.Model):
         clasificacion = db.Column(db.String(250), nullable=False)
         lenguaje = db.Column(db.String(50), nullable=False)
         creacion = db.Column(db.String(10), nullable=False)
+        favorite_personaje_id = db.Column(db.Integer, db.ForeignKey('favoritosPer.id'))
+        
 
     def serialize(self):
         return {
@@ -43,6 +45,7 @@ class User(db.Model):
         id = db.Column(db.Integer, primary_key=True)
         name = db.Column(db.String(50), nullable=False)
         gravedad = db.Column(db.String(50), nullable=False)
+        favoriteplanet_id = db.Column(db.Integer, db.ForeignKey('favoritosplanet.id'))
 
     
     def serialize(self):
@@ -52,11 +55,10 @@ class User(db.Model):
         }
 
     class FavoritosPer(db.Model):
-        __tablename__ = 'favoritosperson'
+        __tablename__ = 'favoritosPer'
         id = db.Column(db.Integer, primary_key=True)
         user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-        personaje_id = db.Column(db.Integer, db.ForeignKey("personajes.id"))
-        
+        Character = db.relationship("Personajes",backref="favorite")     
 
     def serialize(self):
             return {
@@ -69,8 +71,8 @@ class User(db.Model):
         __tablename__ = 'favoritosplanet'
         id = db.Column(db.Integer, primary_key=True)
         user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-        planeta_id = db.Column(db.Integer, db.ForeignKey("planetas.id"))
-
+        planet = db.relationship("Planetas",backref="favorite")
+        
     def serialize(self):
             return {
                 "id": self.id,
